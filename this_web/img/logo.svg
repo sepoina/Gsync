@@ -104,7 +104,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -113,14 +113,14 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="opacity:0.00081125;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.765;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:0.765, 0.76500000000000001;stroke-opacity:0.436997;paint-order:markers fill stroke"
+       style="opacity:0.002;fill:#ffffff;fill-opacity:0.00950492;stroke:none;stroke-width:0.765;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:0.765, 0.76500000000000001;stroke-opacity:0.436997;paint-order:markers fill stroke"
        id="banner800x212"
        width="407.75806"
        height="108.19959"
        x="211.84702"
        y="25.259439"
-       inkscape:export-xdpi="49.833473"
-       inkscape:export-ydpi="49.833473" />
+       inkscape:export-xdpi="49.830002"
+       inkscape:export-ydpi="49.830002" />
     <path
        id="rect841"
        style="fill:#fce762;fill-opacity:1;stroke-width:2.89134;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:2.89134, 2.89134;stroke-opacity:0.436997;paint-order:markers fill stroke"
