@@ -1,3 +1,5 @@
+[![](this_web/img/banner.png)](https://beautifuljekyll.com/plans/)
+
 # Gsync
 Implementazione di **sync bi-direzionale** tra cartelle basato su **rclone**. Il log delle operazioni, i file cancellati o sovrascritti, un mirror degli elenchi files, vengono salvati su cartelle di recupero in modo da rendere le operazioni reversibili.
 
