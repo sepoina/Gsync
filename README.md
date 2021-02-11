@@ -6,6 +6,8 @@ Implementazione di **sync bi-direzionale** tra cartelle basato su **rclone**. Il
 # Esempio operativo
 Sincronizzazione tra una cartella locale e una cartella remota su google drive, livello di status dettagliato, non cancellazione delle directory temporanee create dal processo (a scopo di debug)
 
+# Esempio operativo
+Sincronizzazione tra una cartella locale e una cartella remota su google drive, livello di status dettagliato, non cancellazione delle directory temporanee create dal processo (a scopo di debug)
 
 ## Lo script
 ```bash
