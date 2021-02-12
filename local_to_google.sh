@@ -8,9 +8,9 @@
 # local: <- for local directory
 #
 #######################################################################################################################
-source "gsync.sh"
+source "bin/gsync.sh"
 # two dir for bisync
-directory_A="local:/home/aldo/Scrivania/sync test - 2/CasaZita"
+directory_A="local:/mnt/Laboratorio/L/Backup/googlezita"
 directory_B="googlezita:"
 # name unique for this sync (es:"bysincA-B") or "auto" for generated name
 name_unico="auto"
