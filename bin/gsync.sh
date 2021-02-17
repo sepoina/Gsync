@@ -448,14 +448,18 @@ $(getBytesFromFile "   B > bak  |" "$dir_temp/A_file_erased.txt"  "$formatnumber
 ##################################################
 
 # updata copiando lista di files e creando lastsync.txt
+secho 1 "text" "New List "
 cp "$dir_temp/A_tot_post_update.txt" "$dir_temp/allfiles.txt"
 date +"%Y-%m-%d %H:%M:%S" > "$dir_temp/lastsync.txt"
 echo -e -n "/lastsync.txt\n/alldirs.txt\n/allfiles.txt\nlog/**" > "$dir_temp/filetoremote.txt"
 rclone copy --include-from "$dir_temp/filetoremote.txt" --check-first -q "$dir_temp" "$dir_A/$dir_unica" 
+secho 1 "text" "A "
 rclone copy --include-from "$dir_temp/filetoremote.txt" --check-first -q "$dir_temp" "$dir_B/$dir_unica" 
+secho 1 "text" "// B"
 rm -f "$dir_temp/filetoremote.txt"
 # elimina da temp i file 0 size
-find "$dir_temp" -size 0 -delete
+find "$dir_temp" -type f -size 0 -delete
+secho 1 "text" "....(ok) \n"
 if [ "$Status" != "" ] ; then
   secho 2 "text" "$Status"
  else

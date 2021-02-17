@@ -22,7 +22,7 @@ statuslevel="0"             ;# 0- progress/status/warning/error
 # format of bytes ("readable" or "bytes")
 formatnumber="readable"     
 # Delete temp files ("yes"/"no") for debug
-erasetemp="no"            
+erasetemp="yes"            
 #######################################################################################################################
 
 Gsync 
