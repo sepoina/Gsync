@@ -156,7 +156,7 @@ fi
 #
 ##################################################
 #
-# fa pulizia dei precedenti temporanei se presenti
+# fa pulizia dei precedenti temporanei se presenti [#.1.1]
 rm -f -r "$dir_temp"
 mkdir "$dir_temp"
 mkdir "$dir_temp/lastsync_from_b"
@@ -164,14 +164,14 @@ mkdir "$dir_temp/lastsync_from_a"
 mkdir "$dir_temp/log"
 echo "lock $(date +'%Y.%m.%d.%H-%M-%S')" > "$lockfile" 
 
-# tenta di recuperare l'ultimo update da remoto e lo mette in temp
+# tenta di recuperare l'ultimo update da remoto e lo mette in temp [#.1.2]
 secho 0 "text" "Gsync 2.0 - 2021\n"
 secho 1 "text" "Operazione delle $(date +"%T // %A %u %B %Y")\n"
 secho 1 "text" "Recupero da remoto liste ultimo update..."
 rclone copy -v --include "*.txt" --max-depth 1 "$dir_A/$dir_unica" "$dir_temp/lastsync_from_a" 2> /dev/null 
 rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/lastsync_from_b" 2> /dev/null
 
-# verifica se c'è il file lastsync.txt
+# verifica se c'è il file lastsync.txt 
   if [ ! -f "$dir_temp/lastsync_from_b/lastsync.txt" ]; then
     tempopassato=-1
     stext="Ultimo update non trovato, alcune operazioni possono essere imprecise..:\nfile non trovato: \"$dir_B/$dir_unica/lastsync_from_b/lastsync.txt\"\n"
@@ -180,7 +180,7 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
     stext="Ultimo aggiornamento completo: $(PrintTempoUmanizzato "$tempopassato") fa\n"
   fi
 
-#confronta le due versioni per sapere se ci sono disallineamenti   
+#confronta le due versioni per sapere se ci sono disallineamenti [#.1.3] 
   diff -a --unchanged-line-format="" --old-line-format="Solo in A:%L" --new-line-format="Solo in B:%L" "$dir_temp/lastsync_from_b/allfiles.txt" "$dir_temp/lastsync_from_a/allfiles.txt" | sed '/^[^\*]*\*-1\*.*$/d' > "$dir_temp/error_non_allineati.txt"
   status_sync="$(wc -l "$dir_temp/error_non_allineati.txt" | awk '{ print $1 }')"
   if [ $status_sync -eq 0 ] ; then
@@ -197,20 +197,20 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
 #
 ##################################################
 
-# ottiene una lista dei files e delle cartelle da entrambi i percorsi escludendo la cartella .gsync
+# ottiene una lista dei files e delle cartelle da entrambi i percorsi escludendo la cartella .gsync [#.2.1]
     secho 0 "text" "Tolgo directory // "
     rclone lsf -R  --separator "*" --format "tsp" "$dir_A" --exclude "/.gsync/**" | sort > "$dir_temp/A_tot.txt"
     rclone lsf -R  --separator "*" --format "tsp" "$dir_B" --exclude "/.gsync/**" | sort > "$dir_temp/B_tot.txt"
 
 
 
-# toglie dalle relative liste gli immutati e le directory
+# toglie dalle relative liste gli immutati e le directory [#.2.2] 
     secho 0 "text" "Tolgo immutati // "
     diff -a --unchanged-line-format="" --old-line-format="%L" --new-line-format="" "$dir_temp/A_tot.txt" "$dir_temp/B_tot.txt" | sed '/^[^\*]*\*-1\*.*$/d' > "$dir_temp/A_file_new.txt"
     diff -a --unchanged-line-format="" --old-line-format="" --new-line-format="%L" "$dir_temp/A_tot.txt" "$dir_temp/B_tot.txt" | sed '/^[^\*]*\*-1\*.*$/d' > "$dir_temp/B_file_new.txt"
 
 
-# se il file è presente in entrambe le destinazioni fai prevalere la più recente
+# se il file è presente in entrambe le destinazioni fai prevalere la più recente [#.2.3]
     secho 0 "text" "Tolgo obsoleti per data // "
     while IFS="" read -r p || [ -n "$p" ] 
     do 
@@ -230,7 +230,7 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
 
 
 
-# calcola se ci sono file rimossi
+# calcola se ci sono file rimossi [#.2.4]
     # se presente ultimo backup della lista di A in B 
     if [ -f "$dir_temp/lastsync_from_b/allfiles.txt" ]; then
       secho 0 "text" "Tolgo obsoleti per cancellazione // "
@@ -244,7 +244,7 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
 
     
     
-# rimuove i file obsoleti dagli elenchi degli "apparenti nuovi"
+# rimuove i file obsoleti dagli elenchi degli "apparenti nuovi" [#.2.5]
     # E in caso li rimuove dalla lista di appartenenza
     if [ -f "$dir_temp/A_file_obsolete.txt" ]; then
       sort -o "$dir_temp/A_file_obsolete.txt" "$dir_temp/A_file_obsolete.txt"    ; # li riordina se necessario
@@ -259,7 +259,7 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
 
 
 
-# Pulisce i file togliendo la data e la dimensione
+# Pulisce i file togliendo la data e la dimensione [#.2.6]
     secho 0 "text" "Tolgo dati inutili.\n"
     [[ -s "$dir_temp/A_file_new.txt" ]] &&  cat "$dir_temp/A_file_new.txt" | sed -e 's/^[^\*]*\*[^\*]*\*//' | tee "$dir_temp/A_file_new_final.txt" > /dev/null
     [[ -s "$dir_temp/B_file_new.txt" ]] &&  cat "$dir_temp/B_file_new.txt" | sed -e 's/^[^\*]*\*[^\*]*\*//' | tee "$dir_temp/B_file_new_final.txt" > /dev/null
@@ -273,7 +273,7 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
 ##################################################
 
 
-# Calcola le directory vuote da aggiungere/cancellare. Quelle con files vengono già aggiunte di suo.
+# Calcola le directory vuote da aggiungere/cancellare. Quelle con files vengono già aggiunte di suo. [#.2.7]
     # Tutte le cartelle (elimina i file, elimina la data, ordina)
     cat "$dir_temp/A_tot.txt" | sed '/^[^\*]*\*-1\*.*$/!d' | sed -e 's/^[^\*]*\*[^\*]*\*//' | sort > "$dir_temp/A_dir.txt"
     cat "$dir_temp/B_tot.txt" | sed '/^[^\*]*\*-1\*.*$/!d' | sed -e 's/^[^\*]*\*[^\*]*\*//' | sort > "$dir_temp/B_dir.txt"
@@ -291,7 +291,7 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
     #  riccorenze=$(fgrep "*$p" "$dir_temp/B_tot.txt" | wc -l) ; # conta il numero di ricorrenze solo se 1 è vuota e va considerata
     #  [[ 1 -eq 1 ]] && echo $p >> "$dir_temp/B_dir_new_empty.txt"
     #done <  "$dir_temp/B_dir_new_all.txt"
-    # Se directory già presente in backup precedente è un orfana
+    # Se directory già presente in backup precedente è un orfana [#.2.8]
     if [ -f "$dir_temp/lastsync_from_b/alldirs.txt" ]; then
       diff -a --unchanged-line-format="%L" --old-line-format="" --new-line-format="" "$dir_temp/A_dir_new_empty.txt" "$dir_temp/lastsync_from_b/alldirs.txt" | sed -e 's/$/**/' > "$dir_temp/A_dir_obsolete.txt"
       diff -a --unchanged-line-format="%L" --old-line-format="" --new-line-format="" "$dir_temp/B_dir_new_empty.txt" "$dir_temp/lastsync_from_a/alldirs.txt" | sed -e 's/$/**/' > "$dir_temp/B_dir_obsolete.txt"    
@@ -318,7 +318,7 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
 #
 ##################################################
 
-# backup obsolete A
+# backup obsolete A [#.3.1]
 if [ -s "$dir_temp/A_file_obsolete.txt" ]; then
  secho 1 "text" "Backup file di A obsoleti "
  logseparator "start"
@@ -330,7 +330,7 @@ if [ -s "$dir_temp/A_file_obsolete.txt" ]; then
  logseparator "end"
 fi
 
-# backup obsolete B
+# backup obsolete B  [#.3.2]
 if [ -s "$dir_temp/B_file_obsolete.txt" ]; then
  secho 1 "text" "Backup file di B obsoleti "
  logseparator "start"
@@ -342,7 +342,7 @@ if [ -s "$dir_temp/B_file_obsolete.txt" ]; then
  logseparator "end"
 fi
 
-# sincronizzazione A -> B
+# sincronizzazione A -> B [#.3.3]
 if [ -s "$dir_temp/A_file_new_final.txt" ]; then
  secho 1 "text" "Copio nuovi files A -> B  "
  logseparator "start"
@@ -351,7 +351,7 @@ if [ -s "$dir_temp/A_file_new_final.txt" ]; then
  logseparator "end"
 fi
 
-# sincronizzazione A <- B
+# sincronizzazione A <- B [#.3.4]
 if [ -s "$dir_temp/B_file_new_final.txt" ]; then
  secho 1 "text" "Copio nuovi files A <- B  " 
  logseparator "start"
@@ -368,7 +368,7 @@ fi
 ##################################################
 
 #secho 1 "text" "Operazioni su cartelle  "
-# Creazione directory nuove e vuote in A
+# Creazione directory nuove e vuote in A [#.3.5]
 if [ -s "$dir_temp/B_dir_new_empty_purge.txt" ]; then
  secho 1 "text" "Creo cartelle nuove in A " 
  logseparator "start"
@@ -378,7 +378,7 @@ if [ -s "$dir_temp/B_dir_new_empty_purge.txt" ]; then
  logseparator "end"
 fi
 
-# Creazione directory nuove e vuote in B
+# Creazione directory nuove e vuote in B [#.3.6]
 if [ -s "$dir_temp/A_dir_new_empty_purge.txt" ]; then
  secho 1 "text" "Creo cartelle nuove in B " 
  logseparator "start"
@@ -388,7 +388,7 @@ if [ -s "$dir_temp/A_dir_new_empty_purge.txt" ]; then
  logseparator "end"
 fi
 
-# Eliminazione directory obsolete e vuote in A
+# Eliminazione directory obsolete e vuote in A [#.3.7]
 if [ -s "$dir_temp/A_dir_obsolete.txt" ]; then
  secho 1 "text" "Elimino dir obsolete in A " 
  logseparator "start"
@@ -397,7 +397,7 @@ if [ -s "$dir_temp/A_dir_obsolete.txt" ]; then
  logseparator "end"
 fi
 
-# Eliminazione directory obsolete e vuote in B
+# Eliminazione directory obsolete e vuote in B [#.3.8]
 if [ -s "$dir_temp/B_dir_obsolete.txt" ]; then
  secho 1 "text" "Elimino dir obsolete in B " 
  logseparator "start"
@@ -422,7 +422,7 @@ $(getBytesFromFile "   B > bak  |" "$dir_temp/A_file_erased.txt"  "$formatnumber
 #
 ##################################################
 
-# verifica scaricando le nuove liste da A e B e comparandole per verificare l'assenza di desincro
+# verifica scaricando le nuove liste da A e B e comparandole per verificare l'assenza di desincro [#.4.1] [#.4.2]
     secho 1 "text" "Verifico A == B...."
     rclone lsf -R  --separator "*" --format "tsp" "$dir_A" --exclude "/.gsync/**" | sort > "$dir_temp/A_tot_post_update.txt"
     rclone lsf -R  --separator "*" --format "tsp" "$dir_B" --exclude "/.gsync/**" | sort > "$dir_temp/B_tot_post_update.txt"
@@ -447,7 +447,7 @@ $(getBytesFromFile "   B > bak  |" "$dir_temp/A_file_erased.txt"  "$formatnumber
 #
 ##################################################
 
-# updata copiando lista di files e creando lastsync.txt
+# updata copiando lista di files e creando lastsync.txt [#.4.3] [#.4.4]
 secho 1 "text" "New List "
 cp "$dir_temp/A_tot_post_update.txt" "$dir_temp/allfiles.txt"
 date +"%Y-%m-%d %H:%M:%S" > "$dir_temp/lastsync.txt"
@@ -467,7 +467,7 @@ if [ "$Status" != "" ] ; then
 fi
 # sblocca la procedura
 rm -f "$lockfile" 
-# cancella temp se così richiesto
+# cancella temp se così richiesto [#.4.5]
 [ "$erasetemp" == "yes" ] && rm -f -r "$dir_temp"
 return 0
 }
