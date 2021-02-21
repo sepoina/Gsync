@@ -37,7 +37,7 @@ Implementation of **bi-directional sync** between folders, based on **rclone**. 
     - ftp [here](https://rclone.org/ftp/)
     - in general [video guide](https://www.youtube.com/watch?v=G8YMspboIXs)
 
-1. Configure a script es: "```local_to_google.sh```"
+1. **_Configure a script_** es: "```local_to_google.sh```"
     - inclusion of gsync:` source "gsync.sh"`
     - set Folder A (Origin) eg: `" Local:/Home/Aldo"`
     - set Folder B (destination) eg: `"gdrivealdo:"`
