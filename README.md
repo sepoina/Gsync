@@ -42,7 +42,7 @@ Implementation of **bi-directional sync** between folders, based on **rclone**. 
     - set Folder A (Origin) eg: `" Local:/Home/Aldo"`
     - set Folder B (destination) eg: `"gdrivealdo:"`
     - call ` Gsync` 
-    - ( you can download example [here]("example/local_to_google.sh") )
+    - ( you can download example [here](example/local_to_google.sh) )
 <br><br><br><br>
 
 # Operating example
