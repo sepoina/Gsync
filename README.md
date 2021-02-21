@@ -114,6 +114,9 @@ erasetemp="no"
 Gsync 
 echo "error code:$?"
 ```
+### L'esecuzione
+![](this_web/img/sample_demo.gif)
+
 
 ## Ringraziamenti
 [rclone](https://rclone.org/)
