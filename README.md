@@ -20,26 +20,29 @@ Implementation of **bi-directional sync** between folders, based on **rclone**. 
 
 ## Quick start
 
-1. Download the script [gsync.sh](https://github.com/sepoin/gsync/raw/main/bin/gsync.sh) (three modes):
+1. **_Download the script_** -> [gsync.sh](https://github.com/sepoin/gsync/raw/main/bin/gsync.sh) (three modes):
     - [Download only the latest release of the script](https://github.com/sepoina/Gsync/raw/main/bin/gsync.sh)
     - or [Download the whole package in zip format](https://github.com/sepoina/Gsync/archive/main.zip)
     - or clone this repository: `git clone https://github.com/sepoina/Gsync.git`
 
-1. Install rclone
+1. Install **_rclone_**
     - [Releases rclone](https://rclone.org/downloads/)
     - Attention! [tested with this release](https://beta.rclone.org/branch/fix-rmdirs-filter/v1.55.0-beta.5165.358c0832c.fix-rmdirs-filter/)
+    - to test rclone install (in terminal): ```rclone --version```
+    - version > v1.55.0-beta.5165.358c0832c
 
-1. If you are using a remote cloud configure rclone for access
+1. If you are using a remote cloud **_configure rclone_** for access
     - google drive [here](https://rclone.org/drive/) or [video guide](https://www.youtube.com/watch?v=f8K-V3HHDA0)
     - dropbox [here](https://rclone.org/dropbox/) 
     - ftp [here](https://rclone.org/ftp/)
     - in general [video guide](https://www.youtube.com/watch?v=G8YMspboIXs)
 
-1. Configure a script containing "backup_aldo.sh"
+1. Configure a script es: "```local_to_google.sh```"
     - inclusion of gsync:` source "gsync.sh"`
-    - Folder A (Origin) eg: `" Local:/Home/Aldo"`
-    - Folder B (destination) eg: `"gdrivealdo:"`
+    - set Folder A (Origin) eg: `" Local:/Home/Aldo"`
+    - set Folder B (destination) eg: `"gdrivealdo:"`
     - call ` Gsync` 
+    - ( you can download example [here]("example/local_to_google.sh") )
 <br><br><br><br>
 
 # Operating example
