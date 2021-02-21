@@ -13,7 +13,7 @@ Implementazione di **sync bi-direzionale** tra cartelle basato su **rclone**. Co
 - [Esempio operativo](#esempio-operativo)
 - [Ringraziamenti](#ringraziamenti)
 - [Offri un caffè](#offri-un-caffè)
-
+<br><br>
 ## Quick start
 
 1. Scarica lo script [gsync.sh](https://github.com/sepoina/Gsync/raw/main/bin/gsync.sh) (tre modalità):
@@ -43,11 +43,11 @@ Implementazione di **sync bi-direzionale** tra cartelle basato su **rclone**. Co
 
 ## Status
 [![Size dello script](https://img.badgesize.io/sepoina/Gsync/main/bin/gsync.sh?label=Size%20dello%20script&color=yellow)](https://raw.githubusercontent.com/sepoina/Gsync/main/bin/gsync.sh)
-
+<br><br>
 
 ## Problemi con lo script
 Puoi segnalare problemi allo script o suggerire miglioramenti [indicandoli qui](https://github.com/sepoina/Gsync/issues/new)
-
+<br><br>
 # Documentazione
 ## Fasi della sincronizzazione in una animazione
 ![](this_web/img/actions/animate.gif)
@@ -87,17 +87,23 @@ Le fasi di gsync sono compartimentate per evitare problemi di sincronizzazione, 
 
 ## Esempio operativo
 
-Sincronizzazione tra una cartella locale e una cartella remota su google drive, livello di status dettagliato, non cancellazione delle directory temporanee create dal processo (a scopo di debug)
+Sincronizzazione tra una cartella locale e una cartella remota su google drive, livello di status dettagliato, non cancellazione delle directory temporanee create dal processo (a scopo di debug) <br><br>
+### the dir structure
+- local dir to mirror: ```/home/aldo/CasaZita```<br>
+- remote dir is google drive ```home``` <br>
+- execution dir contain ```gsync.sh``` and ```local_to_google.sh```<br><br>
 
 ### Lo script
 ```bash
+#!/bin/bash
+# import gsync.sh source (same directory)
 source "gsync.sh"
 #####################################################################
 #
 # config this area
 #
 # two dir for bisync es: local/remote
-directory_A="local:/home/aldo/Scrivania/sync test - 2/CasaZita"
+directory_A="local:/home/aldo/CasaZita"
 directory_B="googlezita:"
 # name unique for this sync (es:"bysincA-B") or "auto" for autoUUID
 name_unico="auto"
@@ -114,6 +120,8 @@ erasetemp="no"
 Gsync 
 echo "error code:$?"
 ```
+<br>
+
 ### L'esecuzione
 ![](this_web/img/sample_demo.gif)
 
