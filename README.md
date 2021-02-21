@@ -1,11 +1,12 @@
 ![](this_web/img/banner800x212.png)
 
-# Gsync
+# Gsync &nbsp;&nbsp;&nbsp;&nbsp;[![](this_web/img/italy.png)](README.md)&nbsp;&nbsp;[![](this_web/img/united-kingdom.png)](README_en.md)
+
 Implementazione di **sync bi-direzionale** tra cartelle basato su **rclone**. Consente il **sync bi-direzionale** tra: ```cartelle locali-google drive-ftp-dropbox``` e molti [altri](https://rclone.org/overview/). Il log delle operazioni, i file cancellati o sovrascritti, un mirror degli elenchi files, vengono salvati su cartelle di recupero in modo da rendere tutte le operazioni reversibili.<br><br>
 [![Size dello script](https://img.badgesize.io/sepoina/Gsync/main/bin/gsync.sh?label=Script%20size&color=yellow)](https://raw.githubusercontent.com/sepoina/Gsync/main/bin/gsync.sh)
 <br><br>
 
-## Table of contents
+## Tabella dei contenuti
 
 - [Quick start](#quick-start)
 - [Esempio operativo](#esempio-operativo)
