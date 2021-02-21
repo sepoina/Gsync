@@ -2,7 +2,7 @@
 
 # Gsync &nbsp;&nbsp;&nbsp;&nbsp;[![](this_web/img/italy.png)](README_it.md)&nbsp;&nbsp;[![](this_web/img/united-kingdom.png)](README.md)
 
-Implementation of **bi-directional sync** between folders based on **rclone**.Allows **bi-directional sync** between: ```local folders-google drive-ftp-dropbox``` and many [others](https://rclone.org/overview/). The operation log, the deleted or overwritten files, a mirror of the files lists, are saved on recovery folders in order to make all operations reversible. <br> <br>
+Implementation of **bi-directional sync** between folders, based on **rclone**. Allows **bi-directional sync** between: ```local folders-google drive-ftp-dropbox``` and many [others](https://rclone.org/overview/). The operation log, the deleted or overwritten files, a mirror of the files lists, are saved on "recovery folders" in order to make all operations reversible. <br> <br>
 
 [![Script size](https://img.badgesize.io/sepoina/Gsync/main/bin/gsync.sh?label=Script%20size&color=yellow)](https://raw.githubusercontent.com/sepoina/Gsync/main/bin/gsync.sh)
 <br><br>
@@ -11,10 +11,10 @@ Implementation of **bi-directional sync** between folders based on **rclone**.Al
 
 - [Quick start](#quick-start)
 - [Operating example](#operating-example)
+- [Advanced documentation](#advanced-documentation)
 - [Problem with script](#problem-with-script)
 - [Thanks](#thanks)
 - [Offer a coffee](#offer-a-coffee)
-- [Advanced documentation](#advanced-documentation)
 <br><br>
 
 ## Quick start
@@ -36,8 +36,8 @@ Implementation of **bi-directional sync** between folders based on **rclone**.Al
 
 1. Configure a script containing "backup_aldo.sh"
     - inclusion of gsync:` source "gsync.sh"`
-    - Folders A (Origin) eg: `" Local:/Home/Aldo"`
-    - Folders B (destination) eg: `"gdrivealdo:"`
+    - Folder A (Origin) eg: `" Local:/Home/Aldo"`
+    - Folder B (destination) eg: `"gdrivealdo:"`
     - call ` Gsync` 
 <br><br><br><br>
 
