@@ -5,6 +5,7 @@
 Implementation of **bi-directional sync** between folders, based on **rclone**. Allows **bi-directional sync** between: ```local folders-google drive-ftp-dropbox``` and many [others](https://rclone.org/overview/). The operation log, the deleted or overwritten files, a mirror of the files lists, are saved on "recovery folders" in order to make all operations reversible. <br> <br>
 
 [![Script size](https://img.badgesize.io/sepoina/Gsync/main/bin/gsync.sh?label=Script%20size&color=yellow)](https://raw.githubusercontent.com/sepoina/Gsync/main/bin/gsync.sh)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 <br><br>
 
 ## Table of contents
@@ -122,6 +123,12 @@ The gsync phases are compartmentalized to avoid synchronization problems, you wi
     - [#.4.3] Update the list mirror on A and B (.gsync folder)
     - [#.4.4] synchronization timer update (.gsync folder)
     - [#.4.5] elimination of temp
+<br><br>
+
+## directory structure
+
+A new folder (.gsync) is created in both A and B. It will contain the operation log ("log" folder) and a folder containing the deleted files and folders ("delete-or-overwrite" folder). This will allow the reversibility of the operations.
+![](this_web/img/struttura_directory.jpg)
 <br><br><br><br><br>
 
 # Problem with script

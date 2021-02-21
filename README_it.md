@@ -3,7 +3,7 @@
 # Gsync &nbsp;&nbsp;&nbsp;&nbsp;[![](this_web/img/italy.png)](README_it.md)&nbsp;&nbsp;[![](this_web/img/united-kingdom.png)](README.md)
 
 Implementazione di **sync bi-direzionale** tra cartelle basato su **rclone**. Consente il **sync bi-direzionale** tra: ```cartelle locali-google drive-ftp-dropbox``` e molti [altri](https://rclone.org/overview/). Il log delle operazioni, i file cancellati o sovrascritti, un mirror degli elenchi files, vengono salvati su cartelle di recupero in modo da rendere tutte le operazioni reversibili.<br><br>
-[![Size dello script](https://img.badgesize.io/sepoina/Gsync/main/bin/gsync.sh?label=Script%20size&color=yellow)](https://raw.githubusercontent.com/sepoina/Gsync/main/bin/gsync.sh)
+[![Size dello script](https://img.badgesize.io/sepoina/Gsync/main/bin/gsync.sh?label=Script%20size&color=yellow)](https://raw.githubusercontent.com/sepoina/Gsync/main/bin/gsync.sh)[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 <br><br>
 
 ## Tabella dei contenuti
@@ -117,6 +117,12 @@ Le fasi di gsync sono compartimentate per evitare problemi di sincronizzazione, 
     - [#.4.3] aggiorna il mirror di lista su A e B (cartella .gsync)
     - [#.4.4] update del timer di sincronizzazione (cartella .gsync)
     - [#.4.5] eliminazione di temp 
+<br><br>
+
+## directory structure
+
+Una nuova cartella (.g sync) è creata sia in A che in B. Conterrà il log delle operazioni (cartella "log") e una cartella contenente i file e cartelle eliminati (cartella "delete-or-overwrite"). Questo consentirà la reversibilità delle operazioni. 
+![](this_web/img/struttura_directory.jpg)
 <br><br><br><br><br>
 
 # Problemi con lo script
