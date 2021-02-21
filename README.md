@@ -1,6 +1,6 @@
 ![](this_web/img/banner800x212.png)
 
-# Gsync &nbsp;&nbsp;&nbsp;&nbsp;[![](this_web/img/italy.png)](README.md)&nbsp;&nbsp;[![](this_web/img/united-kingdom.png)](README_en.md)
+# Gsync &nbsp;&nbsp;&nbsp;&nbsp;[![](this_web/img/italy.png)](README_it.md)&nbsp;&nbsp;[![](this_web/img/united-kingdom.png)](README.md)
 
 Implementation of **bi-directional sync** between folders based on **rclone**.Allows **bi-directional sync** between: ```local folders-google drive-ftp-dropbox``` and many [others](https://rclone.org/overview/). The operation log, the deleted or overwritten files, a mirror of the files lists, are saved on recovery folders in order to make all operations reversible. <br> <br>
 
