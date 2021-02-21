@@ -2,53 +2,55 @@
 
 # Gsync &nbsp;&nbsp;&nbsp;&nbsp;[![](this_web/img/italy.png)](README.md)&nbsp;&nbsp;[![](this_web/img/united-kingdom.png)](README_en.md)
 
-Implementazione di **sync bi-direzionale** tra cartelle basato su **rclone**. Consente il **sync bi-direzionale** tra: ```cartelle locali-google drive-ftp-dropbox``` e molti [altri](https://rclone.org/overview/). Il log delle operazioni, i file cancellati o sovrascritti, un mirror degli elenchi files, vengono salvati su cartelle di recupero in modo da rendere tutte le operazioni reversibili.<br><br>
-[![Size dello script](https://img.badgesize.io/sepoina/Gsync/main/bin/gsync.sh?label=Script%20size&color=yellow)](https://raw.githubusercontent.com/sepoina/Gsync/main/bin/gsync.sh)
+Implementation of **bi-directional sync** between folders based on **rclone**.Allows **bi-directional sync** between: ```local folders-google drive-ftp-dropbox``` and many [others](https://rclone.org/overview/). The operation log, the deleted or overwritten files, a mirror of the files lists, are saved on recovery folders in order to make all operations reversible. <br> <br>
+
+[![Script size](https://img.badgesize.io/sepoina/Gsync/main/bin/gsync.sh?label=Script%20size&color=yellow)](https://raw.githubusercontent.com/sepoina/Gsync/main/bin/gsync.sh)
 <br><br>
 
-## Tabella dei contenuti
+## Table of contents
 
 - [Quick start](#quick-start)
-- [Esempio operativo](#esempio-operativo)
-- [Problemi con lo script](#problemi-con-lo-script)
-- [Ringraziamenti](#ringraziamenti)
-- [Offri un caffè](#offri-un-caffè)
-- [Documentazione avanzata](#documentazione-avanzata)
+- [Operating example](#operating-example)
+- [Problem with script](#problem-with-script)
+- [Thanks](#thanks)
+- [Offer a coffee](#offer-a-coffee)
+- [Advanced documentation](#advanced-documentation)
 <br><br>
 
 ## Quick start
-1. Scarica lo script [gsync.sh](https://github.com/sepoina/Gsync/raw/main/bin/gsync.sh) (tre modalità):
 
-    - [Scaricare solo l'ultima release dello script](https://github.com/sepoina/Gsync/raw/main/bin/gsync.sh)
-    - [Scaricare l'intero pacchetto in formato zip](https://github.com/sepoina/Gsync/archive/main.zip)
-    - Clonare questo repository: `git clone https://github.com/sepoina/Gsync.git`
+1. Download the script [gsync.sh](https://github.com/sepoin/gsync/raw/main/bin/gsync.sh) (three modes):
+    - [Download only the latest release of the script](https://github.com/sepoina/Gsync/raw/main/bin/gsync.sh)
+    - or [Download the whole package in zip format](https://github.com/sepoina/Gsync/archive/main.zip)
+    - or clone this repository: `git clone https://github.com/sepoina/Gsync.git`
 
-1. Installa rclone 
-    - [Releases di rclone](https://rclone.org/downloads/)
-    - Attenzione! [testato con questa release](https://beta.rclone.org/branch/fix-rmdirs-filter/v1.55.0-beta.5165.358c0832c.fix-rmdirs-filter/)
+1. Install rclone
+    - [Releases rclone](https://rclone.org/downloads/)
+    - Attention! [tested with this release](https://beta.rclone.org/branch/fix-rmdirs-filter/v1.55.0-beta.5165.358c0832c.fix-rmdirs-filter/)
 
-1. Se si utilizza un cloud remoto configurare rclone per l'accesso
-    - google drive [qui](https://rclone.org/drive/) o [video guida](https://www.youtube.com/watch?v=f8K-V3HHDA0)
-    - dropbox [qui](https://rclone.org/dropbox/) 
-    - ftp [qui](https://rclone.org/ftp/)
-    - in generale [video guida](https://www.youtube.com/watch?v=G8YMspboIXs)
+1. If you are using a remote cloud configure rclone for access
+    - google drive [here](https://rclone.org/drive/) or [video guide](https://www.youtube.com/watch?v=f8K-V3HHDA0)
+    - dropbox [here](https://rclone.org/dropbox/) 
+    - ftp [here](https://rclone.org/ftp/)
+    - in general [video guide](https://www.youtube.com/watch?v=G8YMspboIXs)
 
-1. Configurare uno script "backup_aldo.sh" contenente
-    - inclusione di gsync:` source "gsync.sh"`
-    - cartelle A (origine) es:` "local:/home/aldo"`
-    - cartelle B (destinazione) es:` "gdrivealdo:"`
-    - comando ` Gsync` 
+1. Configure a script containing "backup_aldo.sh"
+    - inclusion of gsync:` source "gsync.sh"`
+    - Folders A (Origin) eg: `" Local:/Home/Aldo"`
+    - Folders B (destination) eg: `"gdrivealdo:"`
+    - call ` Gsync` 
 <br><br><br><br>
 
-# Esempio operativo
+# Operating example
 
-Sincronizzazione tra una cartella locale e una cartella remota su google drive, livello di status dettagliato, non cancellazione delle directory temporanee create dal processo (a scopo di debug) <br><br>
-### La struttura delle directory
+Synchronization between a local folder and a remote folder on google drive, detailed status level, no deletion of temporary directories created by the process (for debugging purposes) <br> <br>
+
+### The directory structure
 - local dir to mirror: ```/home/aldo/CasaZita```<br>
-- remote dir is google drive ```home``` <br>
+- remote dir is google drive "```home```" <br>
 - execution dir contain ```gsync.sh``` and ```local_to_google.sh```<br><br>
 
-### Lo script
+### the script ```local_to_google.sh```
 ```bash
 #!/bin/bash
 # import gsync.sh source (same directory)
@@ -77,55 +79,60 @@ echo "error code:$?"
 ```
 <br>
 
-### L'esecuzione
+### The execution
 ![](this_web/img/sample_demo.gif)
 <br><br><br><br>
 
-# Documentazione Avanzata
-## Fasi della sincronizzazione in una animazione
+# Advanced Documentation
+
+## Phases of synchronization in an animation
 ![](this_web/img/actions/animate.gif)
 
-## Fasi della sincronizzazione nel dettaglio
-Le fasi di gsync sono compartimentate per evitare problemi di sincronizzazione, troverete nel sorgente i numeri di riferimento delle sotto-operazioni
-1. lettura della struttura delle cartelle da sincronizzare (A-B)
-    - [#.1.1] creazione di una directory temporanea in locale
-    - [#.1.2] verifica dell'esistenza di precedenti sincronizzazioni 
-    - [#.1.3] caricamento delle liste da precedenti sync
-    - [#.1.4] caricamento della lista della struttura files/cartelle A
-    - [#.1.5] caricamento della lista della struttura files/cartelle B
-1. sincronizzazione su lista
-    - [#.2.1] toglie i files identici dall'analisi (percorso,dimensione,data)
-    - [#.2.2] sospende l'analisi della struttura directory
-    - [#.2.3] se file presente in entrambe fai prevalere data di aggiornamento
-    - [#.2.4] se file presente solo in una cartella ma presente nell'elenco vecchio è stato cancellato
-    - [#.2.5] crea una lista dei file da cancellare e la rimuove da quella dei nuovi
+## phases of synchronization in detail
+
+The gsync phases are compartmentalized to avoid synchronization problems, you will find the reference numbers of the sub-operations in the source
+
+1. reading the structure of the folders to be synchronized (A-B)
+    - [#.1.1] creating a temporary directory locally
+    - [#.1.2] check for the existence of previous synchronizations
+    - [#.1.3] loading of lists from previous sync
+    - [#.1.4] loading the list of the files / folders structure A
+    - [#.1.5] loading the list of the files / folders structure B
+1. synchronization on the list
+    - [#.2.1] remove identical files from analysis (path, size, date)
+    - [#.2.2] suspends the directory structure analysis
+    - [#.2.3] if file is present in both, make the update date prevail
+    - [#.2.4] if file present only in one folder but present in the old list has been deleted
+    - [#.2.5] creates a list of files to be deleted and removes it from the new one
     - [#.2.6] ripulisce la lista files
-    - [#.2.7] calcola le directory nuove
-    - [#.2.8] calcola quelle obsolete
-1. update della struttura
-    - [#.3.1] copia i file obsoleti di A in una sua sottocartella ".gsync/../erased"
-    - [#.3.2] copia i file obsoleti di B in una sua sottocartella ".gsync/../erased"
-    - [#.3.3] copia i nuovi file di A in B
-    - [#.3.4] copia i nuovi file di B in A
-    - [#.3.5] crea eventuali nuove cartelle vuote in A
-    - [#.3.6] crea eventuali nuove cartelle vuote in B
-    - [#.3.7] elimina eventuali cartelle vuote in A
-    - [#.3.8] elimina eventuali cartelle vuote in B
-1. chiusura delle operazioni
-    - [#.4.1] scarica nuovamente le liste da A e B
-    - [#.4.2] se sono identiche la sincronizzazione è andata a buon fine
-    - [#.4.3] aggiorna il mirror di lista su A e B (cartella .gsync)
-    - [#.4.4] update del timer di sincronizzazione (cartella .gsync)
-    - [#.4.5] eliminazione di temp 
+    - [#.2.7] computes new directories
+    - [#.2.8] calculates the obsolete ones
+1. update of the structure
+    - [#.3.1] copy the obsolete files of A into its subfolder ".gsync /../ erased"
+    - [#.3.2] copy the obsolete files of B into its subfolder ".gsync /../ erased"
+    - [#.3.3] copy the new files from A to B
+    - [#.3.4] Copy the new files of B to a
+    - [#.3.5] creates any new empty folders in A
+    - [#.3.6] creates any new empty folders in B
+    - [#.3.7] delete any empty folders in A
+    - [#.3.8] delete any empty folders in B
+1. closure of operations
+    - [#.4.1] download the lists from A and B again
+    - [#.4.2] if they are identical, the synchronization was successful
+    - [#.4.3] Update the list mirror on A and B (.gsync folder)
+    - [#.4.4] synchronization timer update (.gsync folder)
+    - [#.4.5] elimination of temp
 <br><br><br><br><br>
 
-# Problemi con lo script
-Puoi segnalare problemi allo script o suggerire miglioramenti [indicandoli qui](https://github.com/sepoina/Gsync/issues/new)
+# Problem with script
+
+You can report problems with the script or suggest improvements [indicating them here](https://github.com/sepoina/Gsync/issues/new)
 <br><br>
 
-# Ringraziamenti
+
+# Thanks
 [rclone](https://rclone.org/)
 <br><br>
 
-# Offri un caffè
+# Offer a coffee
 [![](this_web/img/buy-me-a-coffee-with-paypal.png)](https://www.paypal.com/paypalme/giancarloghigi)
