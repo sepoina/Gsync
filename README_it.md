@@ -43,16 +43,20 @@ Implementazione di **sync bi-direzionale** tra cartelle basato su **rclone**. Co
 # Esempio operativo
 
 Sincronizzazione tra una cartella locale e una cartella remota su google drive, livello di status dettagliato, non cancellazione delle directory temporanee create dal processo (a scopo di debug) <br><br>
-### La struttura delle directory
-- local dir to mirror: ```/home/aldo/CasaZita```<br>
-- remote dir is google drive ```home``` <br>
-- execution dir contain ```gsync.sh``` and ```local_to_google.sh```<br><br>
+### The example
+- **``A``** -> is local dir "/mnt/Laboratorio/L/Backup/googlezita" (local: is necessary)<br>
+- **``B``** -> remote cloud rclone [configured](https://rclone.org/drive/) google drive -> "googlezita:"<br>
+- **``name``** -> a name of this sync, "auto" generate unique id<br>
+- **``statuslevel``** -> "0" render stdout max (0-all message,1-progress,2-only warn,3-only error)<br>
+- **``fullreport``** -> "n" not show 0 bytes dialog<br>
+- **``formatnumber``** -> "readable" show number in Mb/GB format not pure bytes<br>
+- **``erasetemp``** -> "y" for delete<br><br>
 
-### Lo script
+### the script for this example: ```local_to_google.sh```<br><br>
 ```bash
 #!/bin/bash
 source "gsync.sh"
-Gsync << json-gsync
+Gsync << JSONgsync
     {    
                    "A" : "local:/mnt/Laboratorio/L/Backup/googlezita",  
                    "B" : "googlezita:",
@@ -62,7 +66,7 @@ Gsync << json-gsync
         "formatnumber" : "readable",
            "erasetemp" : "y"
     }   
-json-gsync
+JSONgsync
 [[ $? -gt 0 ]] && echo "error code:$?"
 ```
 <br>

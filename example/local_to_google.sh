@@ -19,8 +19,7 @@
 #
 #######################################################################################################################
 source "gsync.sh"
-
-Gsync << json-gsync
+Gsync << JSONgsync
     {    
                    "A" : "local:/mnt/Laboratorio/L/Backup/googlezita",  
                    "B" : "googlezita:",
@@ -30,7 +29,7 @@ Gsync << json-gsync
         "formatnumber" : "readable",
            "erasetemp" : "y"
     }   
-json-gsync
+JSONgsync
 [[ $? -gt 0 ]] && echo "error code:$?"
 
 

@@ -37,7 +37,7 @@ Implementation of **bi-directional sync** between folders, based on **rclone**. 
     - ftp [here](https://rclone.org/ftp/)
     - in general [video guide](https://www.youtube.com/watch?v=G8YMspboIXs)
 
-1. **_Configure a script_** es: "```local_to_google.sh```"
+1. **_Create a script fallow example_** es: "```local_to_google.sh```"
     - inclusion of gsync:` source "gsync.sh"`
     - set Folder A (Origin) eg: `" Local:/Home/Aldo"`
     - set Folder B (destination) eg: `"gdrivealdo:"`
@@ -47,18 +47,22 @@ Implementation of **bi-directional sync** between folders, based on **rclone**. 
 
 # Operating example
 
-Synchronization between a local folder and a remote folder on google drive, detailed status level, no deletion of temporary directories created by the process (for debugging purposes) <br> <br>
+Synchronization between ``local folder`` and ``remote folder`` on google drive, ``detailed`` status level, ``delete`` temporary directories created by the process<br> <br>
 
-### The directory structure
-- local dir to mirror: ```/home/aldo/CasaZita```<br>
-- remote dir is google drive "```home```" <br>
-- execution dir contain ```gsync.sh``` and ```local_to_google.sh```<br><br>
+### The example
+- **``A``** -> is local dir "/mnt/Laboratorio/L/Backup/googlezita" (local: is necessary)<br>
+- **``B``** -> remote cloud rclone [configured](https://rclone.org/drive/) google drive -> "googlezita:"<br>
+- **``name``** -> a name of this sync, "auto" generate unique id<br>
+- **``statuslevel``** -> "0" render stdout max (0-all message,1-progress,2-only warn,3-only error)<br>
+- **``fullreport``** -> "n" not show 0 bytes dialog<br>
+- **``formatnumber``** -> "readable" show number in Mb/GB format not pure bytes<br>
+- **``erasetemp``** -> "y" for delete<br><br>
 
-### the example: ```local_to_google.sh```
+### the script for this example: ```local_to_google.sh```<br><br>
 ```bash
 #!/bin/bash
 source "gsync.sh"
-Gsync << json-gsync
+Gsync << JSONgsync
     {    
                    "A" : "local:/mnt/Laboratorio/L/Backup/googlezita",  
                    "B" : "googlezita:",
@@ -68,7 +72,7 @@ Gsync << json-gsync
         "formatnumber" : "readable",
            "erasetemp" : "y"
     }   
-json-gsync
+JSONgsync
 [[ $? -gt 0 ]] && echo "error code:$?"
 ```
 <br>
