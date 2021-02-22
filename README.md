@@ -54,36 +54,26 @@ Synchronization between a local folder and a remote folder on google drive, deta
 - remote dir is google drive "```home```" <br>
 - execution dir contain ```gsync.sh``` and ```local_to_google.sh```<br><br>
 
-### the script ```local_to_google.sh```
+### the example: ```local_to_google.sh```
 ```bash
 #!/bin/bash
-# import gsync.sh source (same directory)
 source "gsync.sh"
-#####################################################################
-#
-# config this area
-#
-# two dir for bisync es: local/remote
-directory_A="local:/home/aldo/CasaZita"
-directory_B="googlezita:"
-# name unique for this sync (es:"bysincA-B") or "auto" for autoUUID
-name_unico="auto"
-# livello di status
-statuslevel="0"   ;# 0- show progress/status/warning/error
-                   # 1- show status/warning/error
-                   # 2- show warning/error
-                   # 3- show only error
-# format of bytes ("readable" or "bytes")
-formatnumber="readable"     
-# Delete temp files ("yes"/"no") for debug
-erasetemp="no"            
-#####################################################################
-Gsync 
-echo "error code:$?"
+Gsync << json-gsync
+    {    
+                   "A" : "local:/mnt/Laboratorio/L/Backup/googlezita",  
+                   "B" : "googlezita:",
+                "name" : "auto",
+         "statuslevel" : "0",
+          "fullreport" : "n",
+        "formatnumber" : "readable",
+           "erasetemp" : "y"
+    }   
+json-gsync
+[[ $? -gt 0 ]] && echo "error code:$?"
 ```
 <br>
 
-### The execution
+### execution
 ![](this_web/img/sample_demo.gif)
 <br><br><br><br>
 

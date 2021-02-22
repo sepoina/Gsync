@@ -1,6 +1,10 @@
 ##################################################
 #
 # gsync versione 2.00
+# Copyright (C) 2021 Ghigi Giancarlo 
+#
+# You may use, distribute and modify this code under the
+# terms of the creative commons by-nc license
 # https://creativecommons.org/licenses/by-nc/4.0/
 #
 ##################################################
@@ -19,6 +23,26 @@ function TestVar {
   if [ "$1" == "" ] ; then
    echo "Variabile mancante, $2"
    quitcode=1
+  fi
+}
+#
+# Extract key from json var
+# https://stackoverflow.com/questions/1955505/parsing-json-with-unix-tools
+#
+# $1 = variable in json
+# $2 = variable in script
+# $3 = messaggio di errore se undef
+# $json = json string
+function AssignFromJson {
+  local string_regex='"([^"\]|\\.)*"'
+  local number_regex='-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?'
+  local value_regex="${string_regex}|${number_regex}|true|false|null"
+  local pair_regex="\"${1}\"[[:space:]]*:[[:space:]]*(${value_regex})"
+  if [[ ${json} =~ ${pair_regex} ]]; then
+    eval "$2=\"$(sed 's/^"\|"$//g' <<< "${BASH_REMATCH[1]}")\""
+  else
+    echo "Variabile $1 non definita, $3"
+    quitcode=1
   fi
 }
 #
@@ -65,18 +89,21 @@ function bytesToHumanReadable() {
 #
 # $1 = testo log
 # $2 = nomefile tabella formato ogni linea: varie*bytes*varie...
-# $3 = bytes/readable
+# incide su $Status e $totalmoved e legge $formatnumber
 function getBytesFromFile () {
     local bytes=0
+    local retval=""
     if [ -s "$2" ]; then
         while IFS="" read -r p || [ -n "$p" ]
         do
             [[ $p =~ [^\*]*[\*]+([0123456789]*) ]]  ; # estrae il numero di bytes da questa lista
             [[ BASH_REMATCH[1] -gt 0 ]] && bytes=$(( bytes + ${BASH_REMATCH[1]} ))
         done <  "$2"
-        [[ "$3" == "bytes" ]] && echo "$1 $bytes\n"
-        [[ "$3" == "readable" ]] && echo "$1 $(bytesToHumanReadable $bytes)\n"
+        totalmoved=$(( bytes + totalmoved ))
     fi
+    [[ "$formatnumber" == "bytes" ]] && retval="$bytes"
+    [[ "$formatnumber" == "readable" ]] && retval="$(bytesToHumanReadable $bytes)"
+    [[ "$fullreport" == "y" || -s "$2" ]] && Status="$Status$1 $retval\n"
 }
 #
 # $1 = livello di echo per questo comando
@@ -120,16 +147,18 @@ function logseparator() {
 
 function Gsync () {
 
-quitcode=0
-TestVar "$directory_A" "'directory_A' deve contenere la cartella di 'origine' di rclone (es \"googledisk:\" oppure \"/home/pippo\")"
-TestVar "$directory_B" "'directory_B' deve contenere la cartella di 'destinazione' di rclone (es \"googledisk:\" oppure \"/home/pippo\")"
-TestVar "$name_unico" "'name_unico' deve contenere un nome univoco di sincronizzazione della coppia origine e destinazione o 'auto' per generare un id unico"
-TestVar "$statuslevel" "'statuslevel' deve contenere un numero (0-all message,1-progress,2-only warn,3-only error)"
-TestVar "$formatnumber" "'formatnumber' deve contenere 'readable' o 'bytes'"
-TestVar "$erasetemp" "'erasetemp' deve contenere 'yes' o 'no'"
-if [[ "$quitcode" == "1" ]] ; then
- return 1
-fi
+ json="$(cat -)"
+ quitcode=0
+ AssignFromJson "A" "directory_A" "e' la cartella sorgente es:'local:/mnt/aldo'"
+ AssignFromJson "B" "directory_B" "e' la cartella destinazione es:'googledisk:aldo_mirror'"
+ AssignFromJson "name" "name_unico" "deve contenere un nome univoco o 'auto' per generare un id unico"
+ AssignFromJson "statuslevel" "statuslevel" "deve contenere un numero (0-all message,1-progress,2-only warn,3-only error)"
+ AssignFromJson "formatnumber" "formatnumber" "deve contenere 'readable' o 'bytes'"
+ AssignFromJson "erasetemp" "erasetemp" " deve contenere 'y' o 'n'"
+ AssignFromJson "fullreport" "fullreport" " deve contenere 'y' o 'n'"
+ if [[ "$quitcode" == "1" ]] ; then
+  return 1
+ fi
 
 ##################################################
 #
@@ -211,20 +240,20 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
 ##################################################
 
 # ottiene una lista dei files e delle cartelle da entrambi i percorsi escludendo la cartella .gsync [#.2.1]
-    secho 0 "text" "Tolgo directory // "
+    secho 0 "text" "Tolgo: (dir // "
     rclone lsf -R  --separator "*" --format "tsp" "$dir_A" --exclude "/.gsync/**" | sort > "$dir_temp/A_tot.txt"
     rclone lsf -R  --separator "*" --format "tsp" "$dir_B" --exclude "/.gsync/**" | sort > "$dir_temp/B_tot.txt"
 
 
 
 # toglie dalle relative liste gli immutati e le directory [#.2.2] 
-    secho 0 "text" "Tolgo immutati // "
+    secho 0 "text" "unchanged // "
     diff -a --unchanged-line-format="" --old-line-format="%L" --new-line-format="" "$dir_temp/A_tot.txt" "$dir_temp/B_tot.txt" | sed '/^[^\*]*\*-1\*.*$/d' > "$dir_temp/A_file_new.txt"
     diff -a --unchanged-line-format="" --old-line-format="" --new-line-format="%L" "$dir_temp/A_tot.txt" "$dir_temp/B_tot.txt" | sed '/^[^\*]*\*-1\*.*$/d' > "$dir_temp/B_file_new.txt"
 
 
 # se il file è presente in entrambe le destinazioni fai prevalere la più recente [#.2.3]
-    secho 0 "text" "Tolgo obsoleti per data // "
+    secho 0 "text" "overwritted // "
     while IFS="" read -r p || [ -n "$p" ] 
     do 
       A_file=$(echo $p | cut -f 3- -d "*") ; # elimina ciò che non è nome file
@@ -246,7 +275,7 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
 # calcola se ci sono file rimossi [#.2.4]
     # se presente ultimo backup della lista di A in B 
     if [ -f "$dir_temp/lastsync_from_b/allfiles.txt" ]; then
-      secho 0 "text" "Tolgo obsoleti per cancellazione // "
+      secho 0 "text" "deleted) -> "
       # se esiste una sincronizzazione precedente togli i file che appaiono "nuovi" ma invece esistevano già, vuol dire che li ha cancellati nell'altro mirror
       diff -a --unchanged-line-format="%L" --old-line-format="" --new-line-format="" "$dir_temp/A_file_new.txt" "$dir_temp/lastsync_from_b/allfiles.txt" > "$dir_temp/B_file_erased.txt"
       diff -a --unchanged-line-format="%L" --old-line-format="" --new-line-format="" "$dir_temp/B_file_new.txt" "$dir_temp/lastsync_from_a/allfiles.txt" > "$dir_temp/A_file_erased.txt"
@@ -273,7 +302,7 @@ rclone copy -v --include "*.txt" --max-depth 1 "$dir_B/$dir_unica" "$dir_temp/la
 
 
 # Pulisce i file togliendo la data e la dimensione [#.2.6]
-    secho 0 "text" "Tolgo dati inutili.\n"
+    secho 0 "text" "Reformat.\n"
     [[ -s "$dir_temp/A_file_new.txt" ]] &&  cat "$dir_temp/A_file_new.txt" | sed -e 's/^[^\*]*\*[^\*]*\*//' | tee "$dir_temp/A_file_new_final.txt" > /dev/null
     [[ -s "$dir_temp/B_file_new.txt" ]] &&  cat "$dir_temp/B_file_new.txt" | sed -e 's/^[^\*]*\*[^\*]*\*//' | tee "$dir_temp/B_file_new_final.txt" > /dev/null
 
@@ -421,12 +450,18 @@ fi
 # secho 1 "text" "(ok)\n"
 # read -p "Press enter to continue"
 
-Status="$(echo "\
-$(getBytesFromFile "   A --> B  |" "$dir_temp/A_file_new.txt"     "$formatnumber")\
-$(getBytesFromFile "   A <-- B  |" "$dir_temp/B_file_new.txt"     "$formatnumber")\
-$(getBytesFromFile "   A > bak  |" "$dir_temp/B_file_erased.txt"  "$formatnumber")\
-$(getBytesFromFile "   B > bak  |" "$dir_temp/A_file_erased.txt"  "$formatnumber")")\
-"
+
+# bytes totali movimentati
+totalmoved=0
+Status=""
+getBytesFromFile "   A --> B  |" "$dir_temp/A_file_new.txt"     
+getBytesFromFile "   A <-- B  |" "$dir_temp/B_file_new.txt"     
+getBytesFromFile "   A > bak  |" "$dir_temp/B_file_erased.txt"  
+getBytesFromFile "   B > bak  |" "$dir_temp/A_file_erased.txt"  
+# vedi se mostrare il movimento di bytes generale
+totaltext="$totalmoved"
+[[ "$formatnumber" == "readable" ]] && totaltext="$(bytesToHumanReadable $totalmoved)"
+[[ "$fullreport" == "y" || $totalmoved -gt 0 ]] && Status="$Status   T.Moved  | $totaltext \n"
 
 
 ##################################################
@@ -481,6 +516,6 @@ fi
 # sblocca la procedura
 rm -f "$lockfile" 
 # cancella temp se così richiesto [#.4.5]
-[ "$erasetemp" == "yes" ] && rm -f -r "$dir_temp"
+[ "$erasetemp" == "y" ] && rm -f -r "$dir_temp"
 return 0
 }
